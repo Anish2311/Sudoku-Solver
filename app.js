@@ -15,52 +15,58 @@ let start = false
 board.style.top = `${(window.innerHeight - dim)/2}px`
 board.style.left = `${(window.innerWidth - dim)/2}px`
 
-if(window.innerHeight > window.innerWidth){
-    solver.style.top = `${(window.innerHeight/36) * 2}px`
-    solver.style.left = `${(window.innerWidth/3) - ((parseInt(window.getComputedStyle(solver).width)) + (window.innerHeight/36) * 3)/2}px`
-    solver.style.fontSize = `${window.innerHeight/32}px`    
-    solver.style.padding = `${window.innerHeight/36}px`
-    clear.style.top = `${(window.innerHeight/36) * 2}px`
-    clear.style.left = `${(window.innerWidth/3) + ((parseInt(window.getComputedStyle(clear).width)) + (window.innerHeight/36) * 4)/2}px`
-    clear.style.fontSize = `${window.innerHeight/32}px`    
-    clear.style.padding = `${window.innerHeight/36}px`
-}
-else{
-    solver.style.top = `${(window.innerHeight/3) - ((parseInt(window.getComputedStyle(solver).height)) + (window.innerWidth/36) * 3)/2}px`
-    solver.style.left = `${(window.innerWidth/36) * 2}px`
-    solver.style.fontSize = `${window.innerWidth/32}px`    
-    solver.style.padding = `${window.innerWidth/36}px`
-    clear.style.top = `${(window.innerHeight/3) + ((parseInt(window.getComputedStyle(clear).height)) + (window.innerWidth/36) * 4)/2}px`
-    clear.style.left = `${(window.innerWidth/36) * 2}px`
-    clear.style.fontSize = `${window.innerWidth/32}px`    
-    clear.style.padding = `${window.innerWidth/36}px`
+pos()
+init()
+
+function pos(){ 
+    if(window.innerHeight > window.innerWidth){
+        solver.style.top = `${(window.innerHeight/36) * 3}px`
+        solver.style.left = `${(window.innerWidth/3) - ((parseInt(window.getComputedStyle(solver).width)) + (window.innerHeight/36) * 2)/2}px`
+        solver.style.fontSize = `${window.innerHeight/40}px`    
+        solver.style.padding = `${window.innerHeight/80}px`
+        clear.style.top = `${(window.innerHeight/36) * 3}px`
+        clear.style.left = `${(window.innerWidth/3) + ((parseInt(window.getComputedStyle(clear).width)) + (window.innerHeight/36) * 8)/2}px`
+        clear.style.fontSize = `${window.innerHeight/40}px`    
+        clear.style.padding = `${window.innerHeight/80}px`
+    }
+    else{
+        solver.style.top = `${(window.innerHeight/3) - ((parseInt(window.getComputedStyle(solver).height)) + (window.innerWidth/36) * 2)/2}px`
+        solver.style.left = `${(window.innerWidth/36) * 3}px`
+        solver.style.fontSize = `${window.innerWidth/40}px`    
+        solver.style.padding = `${window.innerWidth/80}px`
+        clear.style.top = `${(window.innerHeight/3) + ((parseInt(window.getComputedStyle(clear).height)) + (window.innerWidth/36) * 8)/2}px`
+        clear.style.left = `${(window.innerWidth/36) * 3}px`
+        clear.style.fontSize = `${window.innerWidth/40}px`    
+        clear.style.padding = `${window.innerWidth/80}px`
+    }
 }
 
-for(let j = 0; j < 9; j++){
-    let mrkp = ''
-    grid.push([])
-    showGrid.push([])
-    av.push([])
-    for(let i = 0; i < 9; i++){
-        grid[j].push([' ',1,2,3,4,5,6,7,8,9])
-        av[j].push([1,2,3,4,5,6,7,8,9])
-        showGrid[j].push(' ')
-        let color = 'rgb(0, 100, 100);'
-        if(((i < 3 || i > 5) && (j < 3 || j > 5)) || ((i > 2 && i < 6) && (j > 2 && j < 6))){
-            color = 'rgb(0, 50, 50);'
+function init(){
+    for(let j = 0; j < 9; j++){
+        let mrkp = ''
+        grid.push([])
+        showGrid.push([])
+        av.push([])
+        for(let i = 0; i < 9; i++){
+            grid[j].push([' ',1,2,3,4,5,6,7,8,9])
+            av[j].push([1,2,3,4,5,6,7,8,9])
+            showGrid[j].push(' ')
+            let color = 'rgb(0, 100, 100);'
+            if(((i < 3 || i > 5) && (j < 3 || j > 5)) || ((i > 2 && i < 6) && (j > 2 && j < 6))){
+                color = 'rgb(0, 50, 50);'
+            }
+            mrkp += `<div class="block" style="width: ${(dim/9) - 4}px;height: ${(dim/9) - 4}px; margin: 2px; background-color: ${color}; font-size: ${(dim/9) - 6}px;" id="${j}${i}" onclick="change(${j},${i})"> </div>`
         }
-        mrkp += `<div class="block" style="width: ${(dim/9) - 4}px;height: ${(dim/9) - 4}px; margin: 2px; background-color: ${color}; font-size: ${(dim/9) - 6}px;" id="${j}${i}" onclick="change(${j},${i})"> </div>`
+        let markup = `<div class="row" id="${j}">${mrkp}</div>`
+        board.insertAdjacentHTML('beforeend',markup)
     }
-    let markup = `<div class="row" id="${j}">${mrkp}</div>`
-    board.insertAdjacentHTML('beforeend',markup)
-}
 
-for(let j = 0; j < 9; j++){
-    for(let i = 0; i < 9; i++){
-        document.getElementById(`${j}${i}`).innerText = showGrid[j][i]
+    for(let j = 0; j < 9; j++){
+        for(let i = 0; i < 9; i++){
+            document.getElementById(`${j}${i}`).innerText = showGrid[j][i]
+        }
     }
 }
-
 
 function change(j,i){
     if(win == false){
@@ -277,5 +283,12 @@ function unsolve(){
 }
 
 clear.addEventListener('click',()=>{
-    location.reload()
+    grid = []
+    av = []
+    showGrid = []
+    steps = []
+    solving = false
+    win = false
+    start = false
+    init()
 })

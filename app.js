@@ -248,6 +248,8 @@ function set(i,j){
     showGrid[i][j] = opts[rand]
     av[i][j].splice(av[i][j].indexOf(opts[rand]),1)
     // console.log(i,j);
+    document.getElementById(`${i}${j}`).style.color = `rgb(0,220,194)`
+    document.getElementById(`${i}${j}`).style.fontWeight = `100`
     document.getElementById(`${i}${j}`).innerText = showGrid[i][j]
     entropy()
 }
